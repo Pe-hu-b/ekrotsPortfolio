@@ -9,45 +9,29 @@ interface TerminalEntry {
 const commands: Record<string, () => TerminalEntry[]> = {
   help: () => [
     { type: 'output', content: 'Available commands:' },
-    { type: 'output', content: '  help           - Show this help message' },
-    { type: 'output', content: '  run project    - Execute current project' },
-    { type: 'output', content: '  show skills    - Display skill levels' },
-    { type: 'output', content: '  render 3d      - Initialize 3D renderer' },
-    { type: 'output', content: '  whoami         - Display user info' },
-    { type: 'output', content: '  status         - System status' },
-    { type: 'output', content: '  clear          - Clear terminal' }
+    { type: 'output', content: '  help                  - Show this help message' },
+    { type: 'output', content: '  whoami                - Display user info' },
+    { type: 'output', content: '  terminal destroyers   - Initiate destruction protocol' },
+    { type: 'output', content: '  clear                 - Clear terminal' }
   ],
-  'run project': () => [
-    { type: 'output', content: 'Compiling project...' },
-    { type: 'output', content: 'Progress: ████████████ 100%' },
-    { type: 'output', content: 'Build successful! Project ready.' }
-  ],
-  'show skills': () => [
-    { type: 'output', content: 'React/TypeScript  ████████████████ 95%' },
-    { type: 'output', content: 'Three.js/WebGL    ███████████████░ 90%' },
-    { type: 'output', content: 'Node.js/Express   ██████████████░░ 88%' },
-    { type: 'output', content: 'GLSL Shaders      █████████████░░░ 85%' },
-    { type: 'output', content: 'System Design     ████████████░░░░ 82%' }
-  ],
-  'render 3d': () => [
-    { type: 'output', content: 'Initializing WebGL context...' },
-    { type: 'output', content: 'Loading shader programs...' },
-    { type: 'output', content: '3D renderer active!' }
-  ],
+
   whoami: () => [
-    { type: 'output', content: 'root@neural-core' },
-    { type: 'output', content: 'Full-Stack Developer & Creative Technologist' }
+    { type: 'output', content: 'ekrot@system-core' },
+    { type: 'output', content: 'Roblox Systems Engineer' }
   ],
-  status: () => [
-    { type: 'output', content: 'System: OPERATIONAL' },
-    { type: 'output', content: 'Neural Core: ONLINE' },
-    { type: 'output', content: 'Uptime: 99.9%' }
+
+  'terminal destroyers': () => [
+    { type: 'output', content: 'Initializing destruction protocol...' },
+    { type: 'output', content: 'Bypassing neural safeguards...' },
+    { type: 'output', content: 'Overriding system constraints...' },
+    { type: 'output', content: 'Terminal override complete.' },
+    { type: 'output', content: 'You are now the destroyer.' }
   ]
 };
 
 export default function InteractiveTerminal() {
   const [history, setHistory] = useState<TerminalEntry[]>([
-    { type: 'system', content: 'Neural Terminal v3.0.1 - Type "help" for commands' }
+    { type: 'system', content: 'System Console v1.0 - Type "help" for commands' }
   ]);
   const [input, setInput] = useState('');
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
@@ -94,7 +78,10 @@ export default function InteractiveTerminal() {
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (commandHistory.length > 0) {
-        const newIndex = historyIndex < commandHistory.length - 1 ? historyIndex + 1 : historyIndex;
+        const newIndex =
+          historyIndex < commandHistory.length - 1
+            ? historyIndex + 1
+            : historyIndex;
         setHistoryIndex(newIndex);
         setInput(commandHistory[commandHistory.length - 1 - newIndex]);
       }
@@ -120,7 +107,7 @@ export default function InteractiveTerminal() {
         <div className="w-3 h-3 rounded-full bg-red-500" />
         <div className="w-3 h-3 rounded-full bg-yellow-500" />
         <div className="w-3 h-3 rounded-full bg-green-500" />
-        <span className="ml-2 text-xs text-gray-400 font-mono">neural-terminal</span>
+        <span className="ml-2 text-xs text-gray-400 font-mono">system-console</span>
       </div>
 
       <div
@@ -135,13 +122,18 @@ export default function InteractiveTerminal() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.2 }}
               className={
-                entry.type === 'system' ? 'text-gray-600' :
-                entry.type === 'user' ? 'text-white' :
-                entry.type === 'error' ? 'text-red-400' :
-                'text-[#7B61FF]'
+                entry.type === 'system'
+                  ? 'text-gray-600'
+                  : entry.type === 'user'
+                  ? 'text-white'
+                  : entry.type === 'error'
+                  ? 'text-red-400'
+                  : 'text-[#7B61FF]'
               }
             >
-              {entry.type === 'user' && <span className="text-[#00D4FF]">&gt; </span>}
+              {entry.type === 'user' && (
+                <span className="text-[#00D4FF]">&gt; </span>
+              )}
               {entry.content}
             </motion.div>
           ))}
