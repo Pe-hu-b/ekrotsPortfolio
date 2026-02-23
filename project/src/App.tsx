@@ -145,7 +145,7 @@ useEffect(() => {
                     {projects.map((project, index) => (
                       <ProjectCard key={index} {...project} index={index} />
                     ))}
-                  </div>
+                  </div> //print
                 </div>
               </section>
 
