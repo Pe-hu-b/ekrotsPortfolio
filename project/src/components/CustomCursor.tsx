@@ -12,7 +12,7 @@ export default function CustomCursor() {
 
       if (dotRef.current) {
         dotRef.current.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
-      }
+      } 
     };
 
     const animateRing = () => {
