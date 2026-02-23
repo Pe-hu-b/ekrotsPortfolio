@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TerminalEntry {
-  type: 'system' | 'user' | 'output' | 'error' | 'prompt';
+  type: 'system' | 'user' | 'output' | 'error';
   content: string;
 }
 
@@ -14,12 +14,10 @@ const commands: Record<string, () => TerminalEntry[]> = {
     { type: 'output', content: '  terminal destroyers   - Initiate destruction protocol' },
     { type: 'output', content: '  clear                 - Clear terminal' }
   ],
-
   whoami: () => [
     { type: 'output', content: 'ekrot@system-core' },
     { type: 'output', content: 'Roblox Systems Engineer' }
   ],
-
   'terminal destroyers': () => [
     { type: 'output', content: 'Initializing destruction protocol...' },
     { type: 'output', content: 'Bypassing neural safeguards...' },
@@ -31,41 +29,77 @@ const commands: Record<string, () => TerminalEntry[]> = {
 
 export default function InteractiveTerminal() {
   const [history, setHistory] = useState<TerminalEntry[]>([
-    { type: 'system', content: 'System Console v1.0 - Type "help" for commands' }
+    { type: 'system', content: 'System Console v1.0 - Click to activate' }
   ]);
   const [input, setInput] = useState('');
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Scroll only inside terminal
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
   }, [history]);
 
+  // Detect click outside → deactivate
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setIsActive(false);
+        inputRef.current?.blur();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+useEffect(() => {
+  if (!containerRef.current) return;
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry.isIntersecting) {
+        setIsActive(false);
+        inputRef.current?.blur();
+      }
+    },
+    { threshold: 0.2 } // if less than 20% visible, deactivate
+  );
+
+  observer.observe(containerRef.current);
+
+  return () => observer.disconnect();
+}, []);
   const handleCommand = async (cmd: string) => {
     const trimmed = cmd.trim().toLowerCase();
     if (!trimmed) return;
 
-    setHistory((prev) => [...prev, { type: 'user', content: cmd }]);
-    setCommandHistory((prev) => [...prev, cmd]);
+    setHistory(prev => [...prev, { type: 'user', content: cmd }]);
+    setCommandHistory(prev => [...prev, cmd]);
     setInput('');
     setHistoryIndex(-1);
     setIsProcessing(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    await new Promise(resolve => setTimeout(resolve, 400));
 
     if (trimmed === 'clear') {
       setHistory([{ type: 'system', content: 'Terminal cleared.' }]);
     } else if (commands[trimmed]) {
-      setHistory((prev) => [...prev, ...commands[trimmed]()]);
+      setHistory(prev => [...prev, ...commands[trimmed]()]);
     } else {
-      setHistory((prev) => [
+      setHistory(prev => [
         ...prev,
-        { type: 'error', content: `Command not found: ${cmd}. Type "help" for available commands.` }
+        { type: 'error', content: `Command not found: ${cmd}` }
       ]);
     }
 
@@ -73,6 +107,8 @@ export default function InteractiveTerminal() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isActive) return;
+
     if (e.key === 'Enter') {
       handleCommand(input);
     } else if (e.key === 'ArrowUp') {
@@ -100,8 +136,12 @@ export default function InteractiveTerminal() {
 
   return (
     <div
+      ref={containerRef}
       className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden"
-      onClick={() => inputRef.current?.focus()}
+      onClick={() => {
+        setIsActive(true);
+        inputRef.current?.focus();
+      }}
     >
       <div className="flex items-center gap-2 px-4 py-3 bg-white/5 border-b border-white/10">
         <div className="w-3 h-3 rounded-full bg-red-500" />
@@ -149,13 +189,15 @@ export default function InteractiveTerminal() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               className="flex-1 bg-transparent outline-none text-white"
-              autoFocus
+              tabIndex={-1}
             />
-            <motion.span
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 0.7, repeat: Infinity }}
-              className="w-2 h-4 bg-[#00D4FF]"
-            />
+            {isActive && (
+              <motion.span
+                animate={{ opacity: [1, 0, 1] }}
+                transition={{ duration: 0.7, repeat: Infinity }}
+                className="w-2 h-4 bg-[#00D4FF]"
+              />
+            )}
           </div>
         )}
       </div>

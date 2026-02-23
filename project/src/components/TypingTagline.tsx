@@ -2,11 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const phrases = [
-  'Full-Stack Engineer',
+  'Engineer',
   'Systems Architect',
-  'Game Developer',
-  'Graphics Programmer',
-  'Creative Technologist'
+  'Game Developer'
 ];
 
 export default function TypingTagline() {

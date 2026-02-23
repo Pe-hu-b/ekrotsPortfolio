@@ -54,7 +54,9 @@ export default function FloatingNav() {
         {navItems.map((item) => (
           <li key={item.id} className="relative">
             <button
-              onClick={() => scrollToSection(item.id)}
+
+  onMouseDown={(e) => e.preventDefault()}
+  onClick={() => scrollToSection(item.id)}
               className={`relative z-10 px-4 py-2 text-sm font-medium transition-colors ${
                 activeSection === item.id ? 'text-white' : 'text-gray-400 hover:text-gray-200'
               }`}

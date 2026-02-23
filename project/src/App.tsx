@@ -4,7 +4,7 @@ import { Github, Mail, Linkedin } from 'lucide-react';
 import ShaderBackground from './components/ShaderBackground';
 import NeuralCore from './components/NeuralCore';
 import CustomCursor from './components/CustomCursor';
-import BootSequence from './components/BootSequence';
+
 import TypingTagline from './components/TypingTagline';
 import FloatingNav from './components/FloatingNav';
 import ProjectCard from './components/ProjectCard';
@@ -47,11 +47,21 @@ const skills = [
 ];
 
 function App() {
-  const [booted, setBooted] = useState(false);
   const scrollRef = useRef(0);
   const skillsRef = useRef(null);
   const isSkillsInView = useInView(skillsRef, { once: true, margin: '-80px' });
+useEffect(() => {
+  const logScroll = () => {
+    console.log("SCROLL Y:", window.scrollY);
+  };
 
+  window.addEventListener("scroll", logScroll);
+  return () => window.removeEventListener("scroll", logScroll);
+}, []);
+
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
   useEffect(() => {
     const handleScroll = () => {
       const scrollProgress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
@@ -71,11 +81,11 @@ function App() {
 
   return (
     <>
-      <BootSequence onComplete={() => setBooted(true)} />
 
-      {booted && (
+
+
         <>
-          <CustomCursor />
+<CustomCursor />
           <div className="relative bg-[#030306] text-white overflow-x-hidden">
             <ShaderBackground />
             <NeuralCore scrollRef={scrollRef} />
@@ -97,7 +107,7 @@ function App() {
                     className="mb-6"
                   >
                     <h1 className="text-7xl md:text-8xl font-bold mb-4 text-white">
-                      Alex Chen
+                      Ekrots
                     </h1>
                     <div className="text-2xl md:text-3xl">
                       <TypingTagline />
@@ -110,9 +120,8 @@ function App() {
                     transition={{ duration: 0.8, delay: 0.8 }}
                     className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed"
                   >
-                    Building immersive digital experiences at the intersection of code, design, and cutting-edge technology.
-                    Specializing in real-time graphics, distributed systems, and performant web applications.
-                  </motion.p>
+                    Building immersive digital experiences at the intersection of code and cutting-edge technology.
+                    Specializing in programming.                  </motion.p>
                 </motion.div>
               </section>
 
@@ -277,7 +286,7 @@ function App() {
             </div>
           </div>
         </>
-      )}
+    
     </>
   );
 }
