@@ -22,7 +22,7 @@ console.log(videoId)
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.12 }}
     >
-      <SpringTiltCard
+      <SpringTiltCard disableTilt={!!videoId}
         className="group relative overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent transition-all duration-500 hover:border-[#00D4FF]/20 hover:shadow-[0_30px_80px_rgba(0,0,0,0.5),0_0_60px_rgba(0,212,255,0.06)]"
         style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
       >

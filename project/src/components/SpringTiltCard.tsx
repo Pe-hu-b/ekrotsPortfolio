@@ -4,9 +4,16 @@ interface SpringTiltCardProps {
   children: ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  disableTilt?: boolean;
 }
 
-export default function SpringTiltCard({ children, className = '', style }: SpringTiltCardProps) {
+export default function SpringTiltCard({
+  children,
+  className = '',
+  style,
+  disableTilt = false
+}: SpringTiltCardProps) {
+
   const cardRef = useRef<HTMLDivElement>(null);
   const rotX = useRef(0);
   const rotY = useRef(0);
@@ -15,6 +22,7 @@ export default function SpringTiltCard({ children, className = '', style }: Spri
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (disableTilt) return;
     if (!cardRef.current) return;
 
     const rect = cardRef.current.getBoundingClientRect();
@@ -26,25 +34,33 @@ export default function SpringTiltCard({ children, className = '', style }: Spri
 
     if (!isAnimating) {
       setIsAnimating(true);
+
       const animate = () => {
         rotX.current += (targetRotX.current - rotX.current) * 0.1;
         rotY.current += (targetRotY.current - rotY.current) * 0.1;
 
         if (cardRef.current) {
-          cardRef.current.style.transform = `perspective(1000px) rotateX(${rotX.current}deg) rotateY(${rotY.current}deg)`;
+          cardRef.current.style.transform =
+            `perspective(1000px) rotateX(${rotX.current}deg) rotateY(${rotY.current}deg)`;
         }
 
-        if (Math.abs(targetRotX.current - rotX.current) > 0.1 || Math.abs(targetRotY.current - rotY.current) > 0.1) {
+        if (
+          Math.abs(targetRotX.current - rotX.current) > 0.1 ||
+          Math.abs(targetRotY.current - rotY.current) > 0.1
+        ) {
           requestAnimationFrame(animate);
         } else {
           setIsAnimating(false);
         }
       };
+
       animate();
     }
   };
 
   const handleMouseLeave = () => {
+    if (disableTilt) return;
+
     targetRotX.current = 0;
     targetRotY.current = 0;
 
@@ -53,13 +69,15 @@ export default function SpringTiltCard({ children, className = '', style }: Spri
       rotY.current *= 0.85;
 
       if (cardRef.current) {
-        cardRef.current.style.transform = `perspective(1000px) rotateX(${rotX.current}deg) rotateY(${rotY.current}deg)`;
+        cardRef.current.style.transform =
+          `perspective(1000px) rotateX(${rotX.current}deg) rotateY(${rotY.current}deg)`;
       }
 
       if (Math.abs(rotX.current) > 0.01 || Math.abs(rotY.current) > 0.01) {
         requestAnimationFrame(decay);
       }
     };
+
     decay();
   };
 
@@ -69,7 +87,10 @@ export default function SpringTiltCard({ children, className = '', style }: Spri
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={className}
-      style={{ ...style, transition: 'none' }}
+      style={{
+        ...style,
+        transition: disableTilt ? 'transform 0.3s ease' : 'none'
+      }}
     >
       {children}
     </div>
