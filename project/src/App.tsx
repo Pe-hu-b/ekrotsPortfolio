@@ -23,19 +23,19 @@ const projects = [
     title: 'Distributed Task Orchestrator',
     description: 'Microservices architecture handling 10M+ daily operations with event-driven design and advanced caching strategies.',
     tech: ['Node.js', 'Redis', 'PostgreSQL', 'Docker'],
-    videoId: 'Ejbkd6h4Pss'
+    videoId: 'undefined'
   },
   {
     title: 'Quantum State Visualizer',
     description: 'Interactive data visualization platform for quantum computing simulations with real-time WebGL particle systems.',
     tech: ['React', 'WebGL', 'D3.js', 'Python'],
-    videoId: 'Ejbkd6h4Pss'
+    videoId: 'undefined'
   },
   {
     title: 'AI-Powered Code Assistant',
     description: 'Machine learning model integration for intelligent code completion and refactoring suggestions in real-time.',
     tech: ['Python', 'TensorFlow', 'FastAPI', 'WebSockets'],
-    videoId: 'Ejbkd6h4Pss'
+    videoId: 'undefined'
   }
 ];
 

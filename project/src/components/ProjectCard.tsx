@@ -11,6 +11,7 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ title, description, tech, index, videoId }: ProjectCardProps) {
+console.log(videoId)
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-60px' });
 
