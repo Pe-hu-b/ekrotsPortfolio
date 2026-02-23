@@ -1,3 +1,4 @@
+console.log("BootSequence mounted");
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -14,46 +15,43 @@ const bootLines = [
 ];
 
 export default function BootSequence({ onComplete }: BootSequenceProps) {
+console.log("🚀 BootSequence RENDERED");
+console.log("BootSequence called");
   const [currentLine, setCurrentLine] = useState(0);
   const [progress, setProgress] = useState(0);
   const [show, setShow] = useState(true);
 
   useEffect(() => {
-    const hasBooted = sessionStorage.getItem('portfolio_booted_v3');
-    if (hasBooted) {
-      onComplete();
-      setShow(false);
-      return;
-    }
-
-    const lineInterval = setInterval(() => {
-      setCurrentLine((prev) => {
-        if (prev < bootLines.length - 1) return prev + 1;
-        clearInterval(lineInterval);
-        return prev;
-      });
-    }, 300);
-
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          setTimeout(() => {
-            sessionStorage.setItem('portfolio_booted_v3', 'true');
-            setShow(false);
-            setTimeout(onComplete, 800);
-          }, 200);
-          return 100;
-        }
-        return prev + 2.2;
-      });
-    }, 40);
-
-    return () => {
+console.log("BootSequence effect started");
+  const lineInterval = setInterval(() => {
+    setCurrentLine((prev) => {
+      if (prev < bootLines.length - 1) return prev + 1;
       clearInterval(lineInterval);
-      clearInterval(progressInterval);
-    };
-  }, [onComplete]);
+      return prev;
+    });
+  }, 300);
+
+  const progressInterval = setInterval(() => {
+    setProgress((prev) => {
+      if (prev >= 100) {
+        clearInterval(progressInterval);
+        setTimeout(() => {
+          setShow(false);
+          setTimeout(onComplete, 800);
+        }, 200);
+        return 100;
+      }
+      return prev + 2.2;
+    });
+  }, 40);
+
+  return () => {
+    clearInterval(lineInterval);
+    clearInterval(progressInterval);
+  };
+}, [onComplete]);
+
+
 
   if (!show) return null;
 

@@ -4,7 +4,7 @@ import { Github, Mail, Linkedin } from 'lucide-react';
 import ShaderBackground from './components/ShaderBackground';
 import NeuralCore from './components/NeuralCore';
 import CustomCursor from './components/CustomCursor';
-
+import BootSequence from './components/BootSequence';
 import TypingTagline from './components/TypingTagline';
 import FloatingNav from './components/FloatingNav';
 import ProjectCard from './components/ProjectCard';
@@ -47,6 +47,16 @@ const skills = [
 ];
 
 function App() {
+const [booted, setBooted] = useState(false);
+useEffect(() => {
+  if (!booted) return;
+
+  if ('scrollRestoration' in window.history) {
+    window.history.scrollRestoration = 'manual';
+  }
+
+  window.scrollTo(0, 0);
+}, [booted]);
   const scrollRef = useRef(0);
   const skillsRef = useRef(null);
   const isSkillsInView = useInView(skillsRef, { once: true, margin: '-80px' });
@@ -80,19 +90,29 @@ useEffect(() => {
   }, []);
 
   return (
-    <>
+  <>
+    <BootSequence
+      onComplete={() => {
+        console.log("🎯 setBooted(true) called");
+        setBooted(true);
+      }}
+    />
 
+    {booted && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        <CustomCursor />
 
+        <div className="relative bg-[#030306] text-white overflow-x-hidden">
+          <ShaderBackground />
+          <NeuralCore scrollRef={scrollRef} />
+          <VisualOverlays />
+          <FloatingNav />
 
-        <>
-<CustomCursor />
-          <div className="relative bg-[#030306] text-white overflow-x-hidden">
-            <ShaderBackground />
-            <NeuralCore scrollRef={scrollRef} />
-            <VisualOverlays />
-            <FloatingNav />
-
-            <div className="relative z-10">
+          <div className="relative z-10">
               <section id="home" className="min-h-screen flex items-center justify-center px-8">
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
@@ -145,7 +165,7 @@ useEffect(() => {
                     {projects.map((project, index) => (
                       <ProjectCard key={index} {...project} index={index} />
                     ))}
-                  </div> //print
+                  </div> 	
                 </div>
               </section>
 
@@ -284,11 +304,10 @@ useEffect(() => {
                 </div>
               </footer>
             </div>
-          </div>
-        </>
-    
-    </>
-  );
+        </div>
+      </motion.div>
+    )}
+  </>
+);
 }
-
 export default App;

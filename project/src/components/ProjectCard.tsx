@@ -26,7 +26,7 @@ console.log(videoId)
         className="group relative overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent transition-all duration-500 hover:border-[#00D4FF]/20 hover:shadow-[0_30px_80px_rgba(0,0,0,0.5),0_0_60px_rgba(0,212,255,0.06)]"
         style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#00D4FF]/0 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-5" />
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-[#00D4FF]/0 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-5" />
 
         {videoId && (
           <div className="aspect-video w-full overflow-hidden">
