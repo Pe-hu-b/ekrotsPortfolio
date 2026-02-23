@@ -191,8 +191,8 @@ function App() {
                     <h2 className="text-5xl font-bold mb-4">Neural Terminal</h2>
                     <p className="text-gray-500">
                       Try out commands like <code className="text-[#00D4FF] font-mono">help</code>,{' '}
-                      <code className="text-[#00D4FF] font-mono">show skills</code>, or{' '}
-                      <code className="text-[#00D4FF] font-mono">run project</code>
+                      <code className="text-[#00D4FF] font-mono">whoami</code>, or{' '}
+                      <code className="text-[#00D4FF] font-mono">clear</code>
                     </p>
                   </motion.div>
 
@@ -267,7 +267,6 @@ function App() {
                     Crafted with React, Three.js & GLSL
                   </p>
                   <p className="text-gray-700 text-sm">
-                    © 2024 Alex Chen. All rights reserved.
                   </p>
                 </div>
               </footer>
